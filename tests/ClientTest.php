@@ -65,7 +65,7 @@ class ClientTest extends TestCase
     public function it_constructs_command()
     {
         $client = new Client($this->printer['name']);
-        $this->assertEquals("lp -d Brother_MFC_L8850CDW -n 1 -q 1 -H immediate", $client->getCommand());
+        $this->assertEquals(sprintf("lp -d %s -n 1 -q 1 -H immediate", $this->printer['name']), $client->getCommand());
     }
 
     /**
@@ -91,7 +91,7 @@ class ClientTest extends TestCase
         $this->assertEquals('printing', $job->status());
         $this->assertFalse($job->isComplete());
 
-        sleep(60);
+        sleep(15);
 
         $this->assertEquals('completed', $job->status());
         $this->assertTrue($job->isComplete());
