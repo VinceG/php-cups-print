@@ -19,7 +19,7 @@ class Printers
 
     public function all()
     {
-        return $this->printers;
+        return collect($this->printers);
     }
 
     public function get($name)
@@ -29,8 +29,12 @@ class Printers
 
     protected function buildPrinters()
     {
-        $raw = shell_exec("lpstat -p");
-        
+        $raw = shell_exec("lpstat -p & > /dev/null");
+
+        if(gettype($raw) === 'NULL') {
+            return $this;
+        }
+
         $this->printers = collect(explode("\n", $raw))
             ->reject(function ($value) {
                 return empty($value) || stripos($value, 'unknown') !== false || stripos($value, 'looking') !== false;
